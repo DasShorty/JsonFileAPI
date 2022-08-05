@@ -73,7 +73,7 @@ public class JsonFile {
      * @return the object from key
      */
     public Object get(String key) {
-        return jsonObject.get(key);
+        return convertKey(key);
     }
 
     /**
@@ -82,7 +82,30 @@ public class JsonFile {
      * @see JsonFile#get(String) get the object
      */
     public String getString(String key) {
-        return (String) jsonObject.get(key);
+        return (String) convertKey(key);
+    }
+
+    public long getLong(String key) {
+        return (long) convertKey(key);
+    }
+
+    public List<String> getStringList(String key) {
+        return (List<String>) convertKey(key);
+    }
+
+    private Object convertKey(String key) {
+        if (!key.contains(".")) return jsonObject.get(key);
+        String[] paths = key.split("\\.");
+        List<Object> objectList = new ArrayList<>();
+        for (String pathString : paths) {
+            if (objectList.isEmpty()) {
+                objectList.add(jsonObject.get(pathString));
+            } else {
+                JSONObject jsonObject = (JSONObject) objectList.get(objectList.size() - 1);
+                objectList.add(jsonObject.get(pathString));
+            }
+        }
+        return objectList.get(objectList.size() - 1);
     }
 
     /**
@@ -91,6 +114,15 @@ public class JsonFile {
      */
     public void set(String key, Object value) {
         jsonObject.put(key, value);
+        saveFile();
+    }
+
+    /**
+     * remove the key from jsonfile
+     * @param key to remove
+     */
+    public void remove(String key) {
+        jsonObject.remove(key);
         saveFile();
     }
 

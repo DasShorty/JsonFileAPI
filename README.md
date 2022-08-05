@@ -16,7 +16,12 @@
 
 ### Get value with key
 
-``Object o = file.get("test"");``
+``Object o = file.get("test");``
+
+### Get value in different JsonElement/JsonObject
+
+``Object o = file.convertKey("test.welcome");``
+``Object o = file.get("test.welcome");``
 
 # Dependencies
 [Visit JitPack](https://jitpack.io/#ShortException/JsonFileAPI/v1-SNAPSHOT)
